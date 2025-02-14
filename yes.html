@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LY! ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffe6e6;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            animation: popIn 1s ease-out;
+        }
+
+        h1 {
+            color: #ff4d4d;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        p {
+            color: #ff6666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .heart {
+            font-size: 100px;
+            color: #ff4d4d;
+            animation: pulse 1.5s infinite;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #ff4d4d;
+            position: absolute;
+            animation: confettiFall linear infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-10vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* Add new styles for the slideshow */
+        .slideshow-container {
+            width: 450px;
+            height: 300px;
+            position: relative;
+            margin-top: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Optional navigation dots */
+        .dots-container {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ffb3b3;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: #ff4d4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart">❤️</div>
+        <h1>Love you my dearest</h1>
+        <p>See you in Valheim! ❤️</p>
+        
+        <!-- Add slideshow container -->
+        <div class="slideshow-container">
+            <div class="slide active">
+                <img src="image1.jpg" alt="Memory 1">
+            </div>
+            <div class="slide">
+                <img src="image2.jpg" alt="Memory 2">
+            </div>
+            <div class="slide">
+                <img src="image3.jpg" alt="Memory 3">
+            </div>
+            <div class="slide">
+                <img src="image4.jpg" alt="Memory 4">
+            </div>
+            <div class="slide">
+                <img src="image5.jpg" alt="Memory 5">
+            </div>
+        </div>
+        <div class="dots-container"></div>
+    </div>
+
+    <script>
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#ff4d4d', '#ff8080', '#ffb3b3', '#ff6666'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random position
+                confetti.style.left = Math.random() * 100 + 'vw';
+                
+                // Position confetti above the viewport
+                confetti.style.top = Math.random() * -100 + 'px';  // Added line to set top position
+
+                // Random color
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random size
+                const size = Math.random() * 5 + 5;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                // Random animation duration
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Create confetti continuously
+        setInterval(createConfetti, 500);
+
+        // Add slideshow functionality
+        function setupSlideshow() {
+            const slides = document.querySelectorAll('.slide');
+            const dotsContainer = document.querySelector('.dots-container');
+            let currentSlide = 0;
+
+            // Create navigation dots
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+
+            function goToSlide(n) {
+                slides[currentSlide].classList.remove('active');
+                document.querySelectorAll('.dot')[currentSlide].classList.remove('active');
+                
+                currentSlide = n;
+                
+                slides[currentSlide].classList.add('active');
+                document.querySelectorAll('.dot')[currentSlide].classList.add('active');
+            }
+
+            function nextSlide() {
+                const next = (currentSlide + 1) % slides.length;
+                goToSlide(next);
+            }
+
+            // Auto advance slides every 3 seconds
+            setInterval(nextSlide, 3000);
+        }
+
+        // Initialize slideshow
+        setupSlideshow();
+    </script>
+</body>
+</html> 
